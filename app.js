@@ -4,8 +4,6 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const config = require('./config');
 const morgan = require("morgan");
-const https = require("https");
-const fs = require("fs");
 
 const userRoutes = require('./api/routes/user');
 const sportsRoutes = require('./api/routes/sports');
