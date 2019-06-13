@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const config = require('./config');
 const morgan = require("morgan");
+const router = express.Router();
 
 const userRoutes = require('./api/routes/user');
 const sportsRoutes = require('./api/routes/sports');
@@ -45,11 +46,11 @@ app.use((req, res, next) => {
 app.use("/user", userRoutes);
 app.use('/sports', sportsRoutes);
 
-// app.get('/', (err, req, res) => {
-//     res.status(200).json({
-//         message: 'app is running'
-//     })
-// });
+router.get('/', (err, req, res) => {
+    res.status(200).json({
+        message: 'app is running'
+    })
+});
 
 app.use((req, res, next) => {
     const error = new Error("No Page found");
