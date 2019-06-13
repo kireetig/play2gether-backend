@@ -45,8 +45,14 @@ app.use((req, res, next) => {
 app.use("/user", userRoutes);
 app.use('/sports', sportsRoutes);
 
+app.get('/', (err, req, res) => {
+    res.status(200).json({
+        message: 'app is running'
+    })
+});
+
 app.use((req, res, next) => {
-    const error = new Error("Not found");
+    const error = new Error("No Page found");
     error.status = 404;
     next(error);
 });
