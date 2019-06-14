@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const config = require('./config');
 const morgan = require("morgan");
-const router = express.Router();
 
 const userRoutes = require('./api/routes/user');
 const sportsRoutes = require('./api/routes/sports');
@@ -14,9 +13,21 @@ const port = process.env.PORT || 3000;
 mongoose.connect(config.getDbConnectionString(), {useNewUrlParser: true});
 mongoose.set('useFindAndModify', false);
 
+const DBURL = process.env.DBURL;
+const db = mongoose.connection;
+db.on('error', err => {
+    console.log('There was a db connection error');
+});
+db.once('connected', () => {
+    console.log('Successfully connected to ' + DBURL);
+});
+db.once('disconnected', () => {
+    console.log('Successfully disconnected from ' + DBURL);
+});
+
 // mongoose.Promise = global.Promise;
 
-app.use(morgan("dev"));
+app.use(morgan("combined"));
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -38,12 +49,6 @@ app.use((req, res, next) => {
 // Routes which should handle requests
 app.use("/user", userRoutes);
 app.use('/sports', sportsRoutes);
-
-router.get('/', (err, req, res) => {
-    res.status(200).json({
-        message: 'app is running'
-    })
-});
 
 app.use((req, res, next) => {
     const error = new Error("No Page found");
