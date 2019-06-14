@@ -11,8 +11,8 @@ const userSchema = new Schema({
         match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     },
     password: {type: String, required: true},
-    isProfileComplete: Boolean,
-    favSports: []
+    isProfileComplete: {type: Boolean, default: false},
+    favSports: {type: Array}
 });
 
 const User = mongoose.model('User', userSchema);

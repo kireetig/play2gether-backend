@@ -69,7 +69,8 @@ router.post('/login', (req, res, next) => {
                     return res.status(200).json({
                         message: 'Auth Successful',
                         status: 200,
-                        token
+                        token,
+                        isProfileComplete: user[0].isProfileComplete
                     })
                 }
                 return res.status(401).json({
