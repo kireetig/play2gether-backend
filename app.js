@@ -4,22 +4,32 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const config = require('./config');
 const morgan = require("morgan");
+const mongodb = require("mongodb");
 
 const userRoutes = require('./api/routes/user');
 const sportsRoutes = require('./api/routes/sports');
 
 const port = process.env.PORT || 3000;
 
-mongoose.connect(config.getDbConnectionString(), {useNewUrlParser: true});
-mongoose.set('useFindAndModify', false);
+// mongoose.connect(config.getDbConnectionString(), {useNewUrlParser: true});
+// mongoose.set('useFindAndModify', false);
+//
+// const db = mongoose.connection;
+// db.on('error', err => {
+//     console.log('There was a db connection error');
+//     console.log(err);
+// });
 
-const db = mongoose.connection;
-db.on('error', err => {
-    console.log('There was a db connection error');
+const MongoClient = mongodb.MongoClient;
+const client = new MongoClient(config.getDbConnectionString(), {useNewUrlParser: true});
+client.connect(err => {
+    const collection = client.db("test").collection("devices");
+    // perform actions on the collection object
     console.log(err);
+    client.close();
 });
 
-mongoose.Promise = global.Promise;
+// mongoose.Promise = global.Promise;
 
 app.use(morgan("combined"));
 
