@@ -23,9 +23,9 @@ const port = process.env.PORT || 3000;
 const MongoClient = mongodb.MongoClient;
 const client = new MongoClient(config.getDbConnectionString(), {useNewUrlParser: true});
 client.connect(err => {
-    const collection = client.db("test").collection("devices");
     // perform actions on the collection object
     console.log(err);
+    app.use("/user", userRoutes);
     client.close();
 });
 
