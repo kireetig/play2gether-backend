@@ -95,7 +95,7 @@ router.post('/login', (req, res, next) => {
 });
 
 router.get('/getProfile', checkToken, (req, res) => {
-    User.findById(req.userData.id).exec().then(user => {
+    User.findById(req.userData.id,(err, user) => {
         return res.status(200).json({
             ...user
         });
