@@ -11,13 +11,6 @@ const sportsRoutes = require('./api/routes/sports');
 
 const port = process.env.PORT || 3000;
 
-// https.createServer({
-//     key: fs.readFileSync('./security/server.key'),
-//     cert: fs.readFileSync('./security/server.cert')
-// }, app).listen(port, () => {
-//     console.log('Listening...')
-// });
-
 mongoose.connect(config.getDbConnectionString(), {useNewUrlParser: true});
 mongoose.set('useFindAndModify', false);
 
@@ -68,4 +61,6 @@ app.use((error, req, res) => {
 });
 
 
-app.listen(port);
+app.listen(port, () => {
+    console.log('app is running on port :' + port);
+});
