@@ -16,6 +16,8 @@ mongoose.set('useFindAndModify', false);
 const DBURL = process.env.DBURL;
 const db = mongoose.connection;
 db.on('error', err => {
+    console.log(config.getDbConnectionString());
+    console.log(err);
     console.log('There was a db connection error');
 });
 db.once('connected', () => {

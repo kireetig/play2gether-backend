@@ -10,7 +10,6 @@ router.get('/get', (req, res, next) => {
             data: result
         });
     });
-    next();
 });
 
 module.exports = router;
