@@ -4,29 +4,19 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const config = require('./config');
 const morgan = require("morgan");
-const mongodb = require("mongodb");
 
 const userRoutes = require('./api/routes/user');
 const sportsRoutes = require('./api/routes/sports');
 
 const port = process.env.PORT || 3000;
 
-// mongoose.connect(config.getDbConnectionString(), {useNewUrlParser: true});
-// mongoose.set('useFindAndModify', false);
-//
-// const db = mongoose.connection;
-// db.on('error', err => {
-//     console.log('There was a db connection error');
-//     console.log(err);
-// });
+mongoose.connect(config.getDbConnectionString(), {useNewUrlParser: true});
+mongoose.set('useFindAndModify', false);
 
-const MongoClient = mongodb.MongoClient;
-const client = new MongoClient(config.getDbConnectionString(), {useNewUrlParser: true});
-client.connect(err => {
-    // perform actions on the collection object
-    console.log(err);
-    app.use("/user", userRoutes);
-    client.close();
+const db = mongoose.connection;
+db.on('error', err => {
+    console.log('There was a db connection error');
+    console.log('error is :'+ err);
 });
 
 // mongoose.Promise = global.Promise;
@@ -71,5 +61,5 @@ app.use((error, req, res) => {
 
 
 app.listen(port, () => {
-    console.log('app is running on port :' + port);
+    console.log('app is running on port : ' + port);
 });
