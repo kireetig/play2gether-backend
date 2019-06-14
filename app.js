@@ -13,21 +13,13 @@ const port = process.env.PORT || 3000;
 mongoose.connect(config.getDbConnectionString(), {useNewUrlParser: true});
 mongoose.set('useFindAndModify', false);
 
-const DBURL = process.env.DBURL;
 const db = mongoose.connection;
 db.on('error', err => {
-    console.log(config.getDbConnectionString());
-    console.log(err);
     console.log('There was a db connection error');
-});
-db.once('connected', () => {
-    console.log('Successfully connected to ' + DBURL);
-});
-db.once('disconnected', () => {
-    console.log('Successfully disconnected from ' + DBURL);
+    console.log(err);
 });
 
-// mongoose.Promise = global.Promise;
+mongoose.Promise = global.Promise;
 
 app.use(morgan("combined"));
 
