@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
-
+const checkToken = require('../middleware/check-auth');
 const User = require('../models/userModel');
 
 router.post('/signup', (req, res, next) => {
@@ -26,8 +26,17 @@ router.post('/signup', (req, res, next) => {
                     });
                     user.save().then((result) => {
                         console.log(result);
+                        const token = jwt.sign({
+                                email: result.email,
+                                id: result._id
+                            },
+                            config.JWT_KEY,
+                            {
+                                expiresIn: '1h'
+                            });
                         res.status(200).json({
-                            message: 'User Created'
+                            message: 'User Created',
+                            token
                         });
                     }).catch(error => {
                         console.log(error);
@@ -85,7 +94,15 @@ router.post('/login', (req, res, next) => {
     });
 });
 
-router.delete('/:userId', (req, res, next) => {
+router.get('/getProfile', checkToken, (req, res) => {
+    User.findById(req.userData.id).exec().then(user => {
+        return res.status(200).json({
+            ...user
+        });
+    })
+});
+
+router.delete('/:userId', checkToken, (req, res, next) => {
     User.remove({_id: req.params.userId}).exec().then(result => {
         return res.status(200).json({
             message: 'User is deleted'

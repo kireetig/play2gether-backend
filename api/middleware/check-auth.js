@@ -9,7 +9,8 @@ module.exports = (req, res, next) => {
         next();
     }catch (e) {
         return res.status(401).json({
-            message: 'Auth failed'
+            message: 'Auth failed',
+            status: 403
         });
     }
 };
