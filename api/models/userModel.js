@@ -10,7 +10,7 @@ const userSchema = new Schema({
         unique: true,
         match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     },
-    password: {type: String, required: true},
+    password: {type: String, required: true, select: false},
     isProfileComplete: {type: Boolean, default: false},
     favSports: {type: Array}
 });

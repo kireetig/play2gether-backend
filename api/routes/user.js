@@ -95,12 +95,10 @@ router.post('/login', (req, res, next) => {
 });
 
 router.get('/getProfile', checkToken, (req, res) => {
-    User.findById(req.userData.id, (err, user) => {
+    User.findOne({_id: req.userData.id}, (err, user) => {
         if (err) throw err;
-        delete user.password;
-        console.log(user);
         return res.status(200).json({
-            ...user
+            data: user
         });
     })
 });
