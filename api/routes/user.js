@@ -103,6 +103,15 @@ router.get('/getProfile', checkToken, (req, res) => {
     })
 });
 
+router.post('/editProfile', checkToken, (req, res)=> {
+    User.findOneAndUpdate({_id: req.userData.id}, {$set: req.body}, { new: true }, (err, result) => {
+        if (err) throw err;
+        res.status(200).json({
+            data: result
+        })
+    })
+});
+
 router.delete('/:userId', checkToken, (req, res, next) => {
     User.remove({_id: req.params.userId}).exec().then(result => {
         return res.status(200).json({
