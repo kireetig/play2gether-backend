@@ -55,7 +55,8 @@ app.use((error, req, res) => {
     res.json({
         error: {
             message: error.message
-        }
+        },
+        status: error.status || 500
     });
 });
 
