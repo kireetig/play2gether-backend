@@ -5,27 +5,25 @@ const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
 const checkToken = require('../middleware/check-auth');
 const User = require('../models/userModel');
+const errorHandler = require("../middleware/errorHandler");
 
 router.post('/signup', (req, res, next) => {
     User.find({email: req.body.email}).exec().then(user => {
         if (user.length >= 1) {
             return res.status(409).json({
+                status: 409,
                 message: 'Email already exists'
             })
         } else {
             bcrypt.hash(req.body.password, 10, (err, hash) => {
-                if (err) {
-                    return res.status(500).json({
-                        error: err
-                    })
-                } else {
+                if (err) errorHandler(res, err);
+                else {
                     const user = new User({
                         name: req.body.name,
                         email: req.body.email,
                         password: hash
                     });
                     user.save().then((result) => {
-                        console.log(result);
                         const token = jwt.sign({
                                 email: result.email,
                                 id: result._id
@@ -35,14 +33,15 @@ router.post('/signup', (req, res, next) => {
                                 expiresIn: '1h'
                             });
                         res.status(200).json({
+                            status: 200,
                             message: 'User Created',
                             token
                         });
                     }).catch(error => {
-                        console.log(error);
                         res.status(500).json({
-                            message: error
-                        })
+                            message: error,
+                            status: 500
+                        });
                     });
                 }
             });
@@ -83,31 +82,35 @@ router.post('/login', (req, res, next) => {
                     })
                 }
                 return res.status(401).json({
-                    message: 'Auth failed'
+                    message: 'Auth failed',
+                    status: 401
                 })
             })
         }
     }).catch(err => {
         res.status(500).json({
-            error: err
+            error: err,
+            status: 500
         });
     });
 });
 
 router.get('/getProfile', checkToken, (req, res) => {
     User.findOne({_id: req.userData.id}, (err, user) => {
-        if (err) throw err;
+        if (err) errorHandler(res, err);
         return res.status(200).json({
-            data: user
+            data: user,
+            status: 200
         });
     })
 });
 
 router.post('/editProfile', checkToken, (req, res)=> {
     User.findOneAndUpdate({_id: req.userData.id}, {$set: req.body}, { new: true }, (err, result) => {
-        if (err) throw err;
+        if (err) errorHandler(res, err);
         res.status(200).json({
-            data: result
+            data: result,
+            status: 200
         })
     })
 });
@@ -115,11 +118,13 @@ router.post('/editProfile', checkToken, (req, res)=> {
 router.delete('/:userId', checkToken, (req, res, next) => {
     User.remove({_id: req.params.userId}).exec().then(result => {
         return res.status(200).json({
-            message: 'User is deleted'
+            message: 'User is deleted',
+            status: 200
         })
     }).catch(err => {
         res.status(500).json({
-            error: err
+            error: err,
+            status: 500
         });
     });
 });

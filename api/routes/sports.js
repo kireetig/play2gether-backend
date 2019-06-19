@@ -7,7 +7,8 @@ router.get('/get', (req, res, next) => {
     Sports.find((err, result) => {
         if (err) throw err;
         res.status(200).json({
-            data: result
+            data: result,
+            status: 200
         });
     });
 });
