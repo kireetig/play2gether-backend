@@ -7,6 +7,7 @@ const morgan = require("morgan");
 
 const userRoutes = require('./api/routes/user');
 const sportsRoutes = require('./api/routes/sports');
+const gameRoutes = require('./api/routes/game');
 
 const port = process.env.PORT || 3000;
 
@@ -43,6 +44,7 @@ app.use((req, res, next) => {
 // Routes which should handle requests
 app.use("/user", userRoutes);
 app.use('/sports', sportsRoutes);
+app.use('/game', gameRoutes);
 
 app.use((req, res, next) => {
     const error = new Error("No Page found");
