@@ -72,7 +72,7 @@ router.post('/login', (req, res, next) => {
                         },
                         config.JWT_KEY,
                         {
-                            expiresIn: '1h'
+                            expiresIn: '1000h'
                         });
                     return res.status(200).json({
                         message: 'Auth Successful',
