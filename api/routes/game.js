@@ -15,21 +15,17 @@ router.post('/host', checkToken, (req, res, next) => {
         hostId: req.body.hostId,
         hostName: req.body.hostName,
     });
-    game.save((err, result) => {
-        if (err) {
-            res.status(500).json({
-                err,
-                status: 500
-            });
-        } else {
-            res.status(200).json({
-                status: 200,
-                data: {
-                    ...result
-                }
-            });
-        }
-    })
+    game.save().then(result => {
+        res.status(200).json({
+            status: 200,
+            data: result
+        })
+    }).catch(error => {
+        res.status(500).json({
+            error,
+            status: 500
+        });
+    });
 });
 
 module.exports = router;
