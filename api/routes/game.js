@@ -6,6 +6,7 @@ const Game = require('../models/sportsModel');
 
 router.post('/host', checkToken, (req, res, next) => {
     const game = new Game({
+        name: req.body.sportName,
         sportName: req.body.sportName,
         sportId: req.body.sportId,
         venue: req.body.venue,
