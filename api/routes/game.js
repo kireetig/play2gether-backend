@@ -2,11 +2,10 @@ const express = require('express');
 const router = express.Router();
 const checkToken = require('../middleware/check-auth');
 
-const Game = require('../models/sportsModel');
+const Game = require('../models/gameModel');
 
 router.post('/host', checkToken, (req, res, next) => {
     const game = new Game({
-        name: req.body.sportName,
         sportName: req.body.sportName,
         sportId: req.body.sportId,
         venue: req.body.venue,
