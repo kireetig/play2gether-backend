@@ -5,6 +5,7 @@ const checkToken = require('../middleware/check-auth');
 const Game = require('../models/sportsModel');
 
 router.post('/host', checkToken, (req, res, next) => {
+    console.log(req.body);
     const game = new Game({
         ...req.body
     });
