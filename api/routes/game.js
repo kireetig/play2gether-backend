@@ -29,7 +29,7 @@ router.post('/host', checkToken, (req, res, next) => {
 });
 
 router.get('/get', checkToken, (req, res, next) => {
-    Game.find((err, result) => {
+    Game.find({"gameDate": {"$gte": req.query.currentDate} },(err, result) => {
         if (err) throw err;
         res.status(200).json({
             data: result,
