@@ -16,7 +16,8 @@ const gameSchema = new Schema({
         _id: {type: String},
         name: {type: String},
         selfRatingScore: {type: Number},
-        userRatingScore: {type: Number}
+        userRatingScore: {type: Number},
+        messages: {type: String}
     }],
     messages: {type: Array}
 });
