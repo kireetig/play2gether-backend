@@ -14,6 +14,7 @@ router.post('/host', checkToken, (req, res, next) => {
         description: req.body.description,
         hostId: req.body.hostId,
         hostName: req.body.hostName,
+        placeId: req.body.placeId
     });
     game.save().then(result => {
         res.status(200).json({

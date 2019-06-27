@@ -10,6 +10,7 @@ const gameSchema = new Schema({
     gameDate: {type: Date, required: true},
     description: {type: String, required: true},
     hostId: {type: String, required: true},
+    placeId: {type: String},
     hostName: {type: String},
     requests: {type: Array},
     messages: {type: Array}
