@@ -14,7 +14,12 @@ const userSchema = new Schema({
     country: {type: String},
     password: {type: String, required: true, select: false},
     isProfileComplete: {type: Boolean, default: false},
-    favSports: {type: Array}
+    favSports: [{
+        name: {type: String},
+        _id: {type: String},
+        selfRatingScore: {type: Number, default: 0},
+        userRatingScore: {type: Number, default: 0}
+    }]
 });
 
 const User = mongoose.model('User', userSchema);

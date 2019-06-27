@@ -12,7 +12,12 @@ const gameSchema = new Schema({
     hostId: {type: String, required: true},
     placeId: {type: String},
     hostName: {type: String},
-    requests: {type: Array},
+    requests: [{
+        _id: {type: String},
+        name: {type: String},
+        selfRatingScore: {type: Number},
+        userRatingScore: {type: Number}
+    }],
     messages: {type: Array}
 });
 

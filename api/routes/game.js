@@ -30,13 +30,34 @@ router.post('/host', checkToken, (req, res, next) => {
 });
 
 router.get('/get', checkToken, (req, res, next) => {
-    Game.find({"gameDate": {"$gte": req.query.currentDate} },(err, result) => {
-        if (err) throw err;
+    Game.find({"gameDate": {"$gte": req.query.currentDate}}, (err, result) => {
+        if (err) {
+            res.status(500).json({
+                error: err,
+                status: 500
+            });
+        }
         res.status(200).json({
             data: result,
             status: 200
         });
     });
+});
+
+router.post('/request', checkToken, (req, res, next) => {
+    Game.update({"_id": req.query.gameId, "requests._id": {$ne: req.body._id }}, {$addToSet: {"requests": req.body}}, (err, result) => {
+        if (err) {
+            res.status(500).json({
+                error: err,
+                status: 500
+            });
+        } else {
+            res.status(200).json({
+                status: 200,
+                result: result
+            });
+        }
+    })
 });
 
 module.exports = router;
