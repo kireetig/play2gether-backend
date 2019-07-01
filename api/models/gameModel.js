@@ -15,8 +15,8 @@ const gameSchema = new Schema({
     requests: [{
         _id: {type: String},
         name: {type: String},
-        selfRatingScore: {type: Number},
-        userRatingScore: {type: Number},
+        selfRatingScore: {type: Number, default: null},
+        userRatingScore: {type: Number, default: null},
         messages: {type: String},
         isAccepted: {type: Boolean, default: false}
     }],
