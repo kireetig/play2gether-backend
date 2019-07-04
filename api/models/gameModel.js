@@ -20,7 +20,11 @@ const gameSchema = new Schema({
         messages: {type: String},
         isAccepted: {type: Boolean, default: false}
     }],
-    messages: {type: Array}
+    messages: [{
+        message: {type: String},
+        senderName: {type: String},
+        timeStamp: {type: Date}
+    }]
 });
 
 const Game = mongoose.model('Game', gameSchema);

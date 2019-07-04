@@ -45,7 +45,10 @@ router.get('/get', checkToken, (req, res, next) => {
 });
 
 router.post('/request', checkToken, (req, res, next) => {
-    Game.update({"_id": req.query.gameId, "requests._id": {$ne: req.body._id }}, {$addToSet: {"requests": req.body}}, (err, result) => {
+    Game.update({
+        "_id": req.query.gameId,
+        "requests._id": {$ne: req.body._id}
+    }, {$addToSet: {"requests": req.body}}, (err, result) => {
         if (err) {
             res.status(500).json({
                 error: err,
@@ -71,6 +74,39 @@ router.post('/unrequest', checkToken, (req, res, next) => {
             res.status(200).json({
                 status: 200,
                 result: result
+            });
+        }
+    })
+});
+
+router.post('/message', checkToken, (req, res, next) => {
+    Game.update({"_id": req.query.gameId}, {$addToSet: {"messages": req.body}}, (err, result) => {
+        if (err) {
+            res.status(500).json({
+                error: err,
+                status: 500
+            });
+        } else {
+            res.status(200).json({
+                status: 200,
+                result: result
+            });
+        }
+    })
+});
+
+router.get('/message', checkToken, (req, res, next) => {
+    Game.findOne({"_id": req.query.gameId}, (err, result) => {
+        console.log(result);
+        if (err) {
+            res.status(500).json({
+                error: err,
+                status: 500
+            });
+        } else {
+            res.status(200).json({
+                status: 200,
+                result: result.messages || []
             });
         }
     })
