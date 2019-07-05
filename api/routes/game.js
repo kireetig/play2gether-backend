@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const checkToken = require('../middleware/check-auth');
-
+const app = express();
 const Game = require('../models/gameModel');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
