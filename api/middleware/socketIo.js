@@ -15,6 +15,7 @@ module.exports = (user, gameId) => {
         });
 
         socket.on("new message", (data) => {
+            console.log('data');
             io.sockets.in(gameId).emit('game news', users[socket.id] + ': '+ data);
         })
 
