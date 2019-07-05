@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const checkToken = require('../middleware/check-auth');
 const Game = require('../models/gameModel');
-const socketCode = require('../middleware/socketIo');
 
 
 router.post('/host', checkToken, (req, res, next) => {
@@ -80,23 +79,6 @@ router.post('/unrequest', checkToken, (req, res, next) => {
     })
 });
 
-// router.post('/message', checkToken, (req, res, next) => {
-//     Game.update({"_id": req.query.gameId}, {$addToSet: {"messages": req.body}}, (err, result) => {
-//         if (err) {
-//             res.status(500).json({
-//                 error: err,
-//                 status: 500
-//             });
-//         } else {
-//             io.emit('message', req.body);
-//             res.status(200).json({
-//                 status: 200,
-//                 result: result
-//             });
-//         }
-//     })
-// });
-
 router.get('/message', checkToken, (req, res, next) => {
     if (req.query.gameId && req.query.userId) {
         Game.findOne({"_id": req.query.gameId}, (err, result) => {
@@ -106,7 +88,6 @@ router.get('/message', checkToken, (req, res, next) => {
                     status: 500
                 });
             } else {
-                socketCode(req.query.userId, req.query.gameId);
                 res.status(200).json({
                     status: 200,
                     result: result.messages || []

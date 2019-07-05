@@ -4,11 +4,13 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const config = require('./config');
 const morgan = require("morgan");
-const http = require('http').Server(app);
+const http = require('http').createServer(app);
+const io = require('socket.io').listen(http);
 
 const userRoutes = require('./api/routes/user');
 const sportsRoutes = require('./api/routes/sports');
 const gameRoutes = require('./api/routes/game');
+const Game = require('./api/models/gameModel');
 
 const port = process.env.PORT || 3000;
 
@@ -18,7 +20,31 @@ mongoose.set('useFindAndModify', false);
 const db = mongoose.connection;
 db.on('error', err => {
     console.log('There was a db connection error');
-    console.log('error is :'+ err);
+    console.log('error is :' + err);
+});
+
+io.on("connection", socket => {
+    const gameId = socket.handshake.query.gameId;
+    socket.join(gameId);
+
+    socket.on("new message", (data) => {
+        const d = JSON.parse(data);
+        let res;
+        Game.update({"_id": gameId}, {$addToSet: {"messages": d}}, (err, result) => {
+            if (err) {
+                res = {
+                    status: 500,
+                    error: err
+                }
+            } else {
+                res = {
+                    status: 200,
+                    result: d
+                }
+            }
+            io.sockets.in(gameId).emit('game news', res);
+        });
+    })
 });
 
 // mongoose.Promise = global.Promise;
