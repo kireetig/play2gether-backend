@@ -3,6 +3,8 @@ const router = express.Router();
 const checkToken = require('../middleware/check-auth');
 
 const Game = require('../models/gameModel');
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
 router.post('/host', checkToken, (req, res, next) => {
     const game = new Game({
@@ -87,6 +89,7 @@ router.post('/message', checkToken, (req, res, next) => {
                 status: 500
             });
         } else {
+            io.emit('message', req.body);
             res.status(200).json({
                 status: 200,
                 result: result
