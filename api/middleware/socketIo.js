@@ -6,8 +6,9 @@ const io = require('socket.io')(http);
  const users = {};
 
 module.exports = (user, gameId) => {
-    console.log('in socket');
+
     io.sockets.on("connection",  (socket) => {
+
         users[socket.id] = user;
 
         socket.on(gameId, (room) => {
