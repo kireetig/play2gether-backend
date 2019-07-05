@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const config = require('./config');
 const morgan = require("morgan");
 const http = require('http').Server(app);
-const io = require('socket.io')(http);
 
 const userRoutes = require('./api/routes/user');
 const sportsRoutes = require('./api/routes/sports');
@@ -64,9 +63,6 @@ app.use((error, req, res) => {
     });
 });
 
-io.on('connection', () =>{
-    console.log('a user is connected')
-});
 
 http.listen(port, () => {
     console.log('app is running on port : ' + port);

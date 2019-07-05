@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const checkToken = require('../middleware/check-auth');
-const app = express();
 const Game = require('../models/gameModel');
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const socketCode = require('../middleware/socketIo');
+
 
 router.post('/host', checkToken, (req, res, next) => {
     const game = new Game({
@@ -81,38 +80,45 @@ router.post('/unrequest', checkToken, (req, res, next) => {
     })
 });
 
-router.post('/message', checkToken, (req, res, next) => {
-    Game.update({"_id": req.query.gameId}, {$addToSet: {"messages": req.body}}, (err, result) => {
-        if (err) {
-            res.status(500).json({
-                error: err,
-                status: 500
-            });
-        } else {
-            io.emit('message', req.body);
-            res.status(200).json({
-                status: 200,
-                result: result
-            });
-        }
-    })
-});
+// router.post('/message', checkToken, (req, res, next) => {
+//     Game.update({"_id": req.query.gameId}, {$addToSet: {"messages": req.body}}, (err, result) => {
+//         if (err) {
+//             res.status(500).json({
+//                 error: err,
+//                 status: 500
+//             });
+//         } else {
+//             io.emit('message', req.body);
+//             res.status(200).json({
+//                 status: 200,
+//                 result: result
+//             });
+//         }
+//     })
+// });
 
 router.get('/message', checkToken, (req, res, next) => {
-    Game.findOne({"_id": req.query.gameId}, (err, result) => {
-        console.log(result);
-        if (err) {
-            res.status(500).json({
-                error: err,
-                status: 500
-            });
-        } else {
-            res.status(200).json({
-                status: 200,
-                result: result.messages || []
-            });
-        }
-    })
+    if (req.query.gameId && req.query.userId) {
+        Game.findOne({"_id": req.query.gameId}, (err, result) => {
+            if (err) {
+                res.status(500).json({
+                    error: err,
+                    status: 500
+                });
+            } else {
+                socketCode(req.query.userId, req.query.gameId);
+                res.status(200).json({
+                    status: 200,
+                    result: result.messages || []
+                });
+            }
+        })
+    }else{
+        res.status(403).json({
+            error: 'Bad Request, userId or gameId is missing',
+            status: 500
+        });
+    }
 });
 
 module.exports = router;
