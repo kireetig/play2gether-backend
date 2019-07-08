@@ -23,6 +23,7 @@ const gameSchema = new Schema({
     messages: [{
         message: {type: String},
         senderName: {type: String},
+        senderId: {type:String},
         timestamp: {type: Date}
     }]
 });
