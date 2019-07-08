@@ -46,8 +46,7 @@ router.get('/get', checkToken, (req, res, next) => {
 
 router.post('/request', checkToken, (req, res, next) => {
     Game.update({
-        "_id": req.query.gameId,
-        "requests._id": {$ne: req.body._id}
+        "_id": req.query.gameId
     }, {$addToSet: {"requests": req.body}}, (err, result) => {
         if (err) {
             res.status(500).json({
