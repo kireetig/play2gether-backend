@@ -46,7 +46,8 @@ router.get('/get', checkToken, (req, res, next) => {
 
 router.post('/request', checkToken, (req, res, next) => {
     Game.update({
-        "_id": req.query.gameId
+        "_id": req.query.gameId,
+        "requests._id": {$ne: req.body._id}
     }, {$addToSet: {"requests": req.body}}, (err, result) => {
         if (err) {
             res.status(500).json({
@@ -93,12 +94,30 @@ router.get('/message', checkToken, (req, res, next) => {
                 });
             }
         })
-    }else{
+    } else {
         res.status(403).json({
             error: 'Bad Request, userId or gameId is missing',
             status: 500
         });
     }
+});
+
+router.post('/toggleAccept', checkToken, (req, res, next) => {
+    Game.findOneAndUpdate({"_id": req.query.gameId, "requests._id": req.body._id},
+        {$set: {"requests.$.isAccepted": req.body.isAccepted}}, { "new": true, "upsert": true }, (err, result) => {
+            console.log(result.requests, req.body.isAccepted);
+            if (err) {
+                res.status(500).json({
+                    error: err,
+                    status: 500
+                });
+            } else {
+                res.status(200).json({
+                    status: 200,
+                    result: result
+                });
+            }
+        })
 });
 
 module.exports = router;
