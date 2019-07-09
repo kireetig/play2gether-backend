@@ -64,7 +64,7 @@ router.post('/request', checkToken, (req, res, next) => {
 });
 
 router.post('/unrequest', checkToken, (req, res, next) => {
-    Game.update({"_id": req.query.gameId}, {$pull: {"requests": req.body}}, (err, result) => {
+    Game.update({"_id": req.query.gameId}, {$pull: {"requests": {"_id":req.body._id}}}, (err, result) => {
         if (err) {
             res.status(500).json({
                 error: err,
