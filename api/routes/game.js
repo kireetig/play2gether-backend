@@ -64,7 +64,7 @@ router.post('/request', checkToken, (req, res, next) => {
 });
 
 router.post('/unrequest', checkToken, (req, res, next) => {
-    Game.update({"_id": req.query.gameId}, {$pull: {"requests": {"_id":req.body._id}}}, (err, result) => {
+    Game.update({"_id": req.query.gameId}, {$pull: {"requests": {"_id": req.body._id}}}, (err, result) => {
         if (err) {
             res.status(500).json({
                 error: err,
@@ -104,8 +104,7 @@ router.get('/message', checkToken, (req, res, next) => {
 
 router.post('/toggleAccept', checkToken, (req, res, next) => {
     Game.findOneAndUpdate({"_id": req.query.gameId, "requests._id": req.body._id},
-        {$set: {"requests.$.isAccepted": req.body.isAccepted}}, { "new": true, "upsert": true }, (err, result) => {
-            console.log(result.requests, req.body.isAccepted);
+        {$set: {"requests.$.isAccepted": req.body.isAccepted}}, {"new": true, "upsert": true}, (err, result) => {
             if (err) {
                 res.status(500).json({
                     error: err,
@@ -118,6 +117,22 @@ router.post('/toggleAccept', checkToken, (req, res, next) => {
                 });
             }
         })
+});
+
+router.delete('/delete', checkToken, (req, res, next) => {
+    Game.deleteOne({"_id": req.query.gameId}, (err, result) => {
+        if (err) {
+            res.status(500).json({
+                error: err,
+                status: 500
+            });
+        } else {
+            res.status(200).json({
+                status: 200,
+                result: 'Delete Successful'
+            });
+        }
+    })
 });
 
 module.exports = router;
